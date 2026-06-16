@@ -36,16 +36,15 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: 'Erro interno do servidor' });
 });
 
-// Testar conexão com banco de dados
-pool.query('SELECT NOW()', (err, result) => {
-  if (err) {
-    console.error('Erro ao conectar ao banco de dados:', err);
-  } else {
-    console.log('✅ Banco de dados conectado');
+(async () => {
+  try {
+    await pool.init();
+    app.listen(PORT, () => {
+      console.log(`🚀 Servidor FutShop rodando na porta ${PORT}`);
+      console.log(`📝 API disponível em http://localhost:${PORT}/v1`);
+    });
+  } catch (error) {
+    console.error('Erro ao iniciar o servidor:', error);
+    process.exit(1);
   }
-});
-
-app.listen(PORT, () => {
-  console.log(`🚀 Servidor FutShop rodando na porta ${PORT}`);
-  console.log(`📝 API disponível em http://localhost:${PORT}/v1`);
-});
+})();

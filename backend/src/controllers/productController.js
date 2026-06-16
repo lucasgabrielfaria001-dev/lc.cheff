@@ -48,7 +48,7 @@ exports.listProducts = async (req, res) => {
     const result = await pool.query(query, params);
 
     // Contar total de produtos
-    let countQuery = 'SELECT COUNT(*) FROM products WHERE active = true';
+    let countQuery = 'SELECT COUNT(*) AS count FROM products WHERE active = true';
     const countParams = [];
 
     if (category) {
@@ -57,7 +57,7 @@ exports.listProducts = async (req, res) => {
     }
 
     const countResult = await pool.query(countQuery, countParams);
-    const total = parseInt(countResult.rows[0].count);
+    const total = parseInt(countResult.rows[0]?.count || 0, 10);
 
     res.json({
       data: result.rows,
